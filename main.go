@@ -8,8 +8,6 @@ import (
 	"url-health/internal"
 )
 
-var wg sync.WaitGroup
-
 func main() {
 
 	options := internal.GetOptions()
@@ -21,6 +19,7 @@ func main() {
 
 	urls := internal.GetUrlList(filepath)
 
+	var wg sync.WaitGroup
 	get := internal.GetCallFunction(&wg)
 	testStart := time.Now()
 
