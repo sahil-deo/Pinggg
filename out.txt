@@ -1,0 +1,5 @@
+https://www.scalant.in 200 OK 792.342667ms
+https://www.google.com 200 OK 794.595875ms
+https://www.reddit.com 200 OK 796.346458ms
+https://www.youtube.com 200 OK 835.555458ms
+https://www.linkedin.com 200 OK 1.274728333s

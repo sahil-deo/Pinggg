@@ -1,0 +1,6 @@
+url,status,response_time
+https://www.scalant.in,200 OK,354.969042ms
+https://www.google.com,200 OK,368.970958ms
+https://www.reddit.com,200 OK,471.522333ms
+https://www.youtube.com,200 OK,617.294416ms
+https://www.linkedin.com,200 OK,783.992375ms

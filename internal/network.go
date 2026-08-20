@@ -1,18 +1,17 @@
 package internal
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"sync"
 	"time"
 )
 
-func GetCallFunction(wg *sync.WaitGroup) func(url string) {
+func GetCallFunction(wg *sync.WaitGroup) func(string, *[]map[string]string) {
 
 	client := &http.Client{}
 
-	return func(url string) {
+	return func(url string, responses *[]map[string]string) {
 
 		defer wg.Done()
 
@@ -23,12 +22,17 @@ func GetCallFunction(wg *sync.WaitGroup) func(url string) {
 
 		start := time.Now()
 		res, err := client.Do(request)
-		duration := time.Since(start).Seconds()
+		duration := time.Since(start).String()
 
 		if err != nil {
 			log.Fatalf("error %s", err.Error())
 		}
+		response := map[string]string{
+			"url":           url,
+			"status":        res.Status,
+			"response_time": string(duration),
+		}
 
-		fmt.Printf("%s %s %f\n", url, res.Status, duration)
+		*responses = append(*responses, response)
 	}
 }
