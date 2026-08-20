@@ -38,3 +38,8 @@ https://www.linkedin.com 200 OK 390.19525ms
 - Max go routines allowed along with `-c` flag (right now, no limit).
 - Directly take url input from CLI command (right now, input only supported via input file).
 - Add request timeout for http requests, also configurable via CLI options `-t 5 (in seconds)`
+
+
+<p align="center">
+  <img src="https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white" alt="Go">
+</p>
