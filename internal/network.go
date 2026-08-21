@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func GetCallFunction(wg *sync.WaitGroup) func(string, *[]map[string]string) {
+func GetCallFunction(wg *sync.WaitGroup, maxRoutines *chan struct{}) func(string, *[]map[string]string) {
 
 	client := &http.Client{}
 
@@ -34,5 +34,6 @@ func GetCallFunction(wg *sync.WaitGroup) func(string, *[]map[string]string) {
 		}
 
 		*responses = append(*responses, response)
+		<-*maxRoutines
 	}
 }

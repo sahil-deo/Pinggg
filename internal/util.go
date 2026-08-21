@@ -31,8 +31,9 @@ func GetOptions() map[string]string {
 			lastArgErr(i)
 			options["-f"] = os.Args[i+1]
 			i++
-		default:
-			options[os.Args[i]] = ""
+		case "-c":
+			lastArgErr(i)
+			options["-c"] = os.Args[i+1]
 		}
 
 	}
