@@ -1,3 +1,3 @@
-module url-health
+module pinggg
 
 go 1.26.4

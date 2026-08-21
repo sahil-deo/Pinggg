@@ -4,10 +4,10 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"pinggg/internal"
 	"strconv"
 	"sync"
 	"time"
-	"url-health/internal"
 )
 
 func check(err error) {
