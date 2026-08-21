@@ -1,7 +1,6 @@
 ## Pinggg
 
 Pinggg is a concurrent CLI tool written in Golang for checking url health. It returns url status code and response time. 
-
 It takes in a file consisting a list of urls as inputs and outputs the responses either in the terminal or a specified output file. 
 
 Output file types supported: 
