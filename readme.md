@@ -32,14 +32,19 @@ https://www.linkedin.com 200 OK 390.19525ms
 | `-c [n]`            | `-c 5`                | Use go routines for simulteneously make http calls, n is max routines allowed, use < 0 for no limits
 | `-o [outtype]`      | `-o json`             | Output file type [ json \| csv \| txt ] 
 | `-n [filepath]`     | `-n out.json`         | Output file path
+| `-t [duration_ms]`   | `-t 10000`            | Timeout per request in ms
 | `-h`                | `-h`                  | Print Help
 
 #### Future Scope
 
 - <s>Max go routines allowed along with `-c` flag (right now, no limit).</s>
 - <s>Directly take url input from CLI command (right now, input only supported via input file).</s>
-- Add request timeout for http requests, also configurable via CLI options `-t 5 (in seconds)`.
+- <s>Add request timeout for http requests, also configurable via CLI options `-t 5000 (in ms)`.</s>
 - <s>Use os/flag for cli options.</s>
+- Support for other types of http requests [Post, Put, Delete], currently supportes only Get
+- Support for custom headers.
+- GUI or TUI Client, Currently CLI Only
+
 
 
 <p align="center">
