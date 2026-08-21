@@ -12,7 +12,7 @@ Output file types supported:
 #### Usage
 
 ``` bash
-go run . -f test/test -c
+go run . -f test/test -c 5
 ```
 
 ``` bash
@@ -25,20 +25,21 @@ https://www.linkedin.com 200 OK 390.19525ms
 ```
 
 #### Options 
-|Option             |Description |
-| :---              | :----
-| `-f [filepath]`     | Input file path   
-| `-c [n]`            | Use go routines for simulteneously make http calls, n is max routines allowed, use < 0 for no limits
-| `-json [filepath]`  | Output to .json file 
-| `-csv [filepath]`   | Output to .csv file 
-| `-txt [filepath]`   | Output to .txt file 
+|Option               |Usage|Description 
+| :---                | :----                 | :----
+| `-f [filepath]`     | `-f test.txt`         | Input file path   
+| `-u [url]`          | `-u htts://google.com`| Input single url to ping 
+| `-c [n]`            | `-c 5`                | Use go routines for simulteneously make http calls, n is max routines allowed, use < 0 for no limits
+| `-o [outtype]`      | `-o json`             | Output file type [ json \| csv \| txt ] 
+| `-n [filepath]`     | `-n out.json`         | Output file path
+| `-h`                | `-h`                  | Print Help
 
 #### Future Scope
 
 - <s>Max go routines allowed along with `-c` flag (right now, no limit).</s>
-- Directly take url input from CLI command (right now, input only supported via input file).
+- <s>Directly take url input from CLI command (right now, input only supported via input file).</s>
 - Add request timeout for http requests, also configurable via CLI options `-t 5 (in seconds)`.
-- Use os/flag for cli options.
+- <s>Use os/flag for cli options.</s>
 
 
 <p align="center">
