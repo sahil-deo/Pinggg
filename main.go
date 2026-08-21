@@ -23,6 +23,7 @@ func main() {
 	flag.Parse()
 	options := make(map[string]string) // map to store the flags
 	options["c"] = "1"                 // default concurrency
+	options["t"] = "10000"             // default timeout (10 seconds = 10000 ms)
 
 	// check flags which are only set
 	flag.Visit(func(f *flag.Flag) {
@@ -57,6 +58,9 @@ func main() {
 		max = 999 // hardlimit
 	}
 
+	timeout_ms, err := strconv.Atoi(options["t"])
+	check(err)
+
 	maxRoutines := make(chan struct{}, max) // semaphore
 
 	// get the function to make the get calls
@@ -68,7 +72,7 @@ func main() {
 	for _, url := range urls {
 		wg.Add(1)
 		maxRoutines <- struct{}{}
-		go get(url, &responses)
+		go get(url, &responses, time.Duration(timeout_ms)*time.Millisecond)
 	}
 
 	wg.Wait()
