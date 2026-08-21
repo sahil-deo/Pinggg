@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"strconv"
@@ -17,26 +18,48 @@ func check(err error) {
 
 func main() {
 
-	options := internal.GetOptions()
+	// options := internal.GetOptions()
+	internal.DefineFlags() // declare flags
+	flag.Parse()
+	options := make(map[string]string) // map to store the flags
+	options["c"] = "1"                 // default concurrency
 
-	filepath, ok := options["-f"]
-	if !ok {
-		log.Fatal("No filepath provided")
+	// check flags which are only set
+	flag.Visit(func(f *flag.Flag) {
+		options[f.Name] = f.Value.String()
+	})
+
+	// u = url flag
+	// f = filepath flag
+	// atleast one is required
+	url, uok := options["u"]
+	filepath, fok := options["f"]
+
+	if !uok && !fok {
+		log.Fatal("No url or filepath provided")
 	}
 
-	urls := internal.GetUrlList(filepath)
+	urls := []string{}
+
+	switch {
+	case uok:
+		urls = append(urls, url)
+	case fok:
+		urls = internal.GetUrlList(filepath)
+	}
 
 	var wg sync.WaitGroup
-	max, ok := options["-c"]
-	if !ok {
-		log.Fatal("No max go routines specified")
-	}
-	maxI, err := strconv.Atoi(max)
+
+	// c = concurrency flag; default is 1
+	max, err := strconv.Atoi(options["c"])
 	check(err)
-	if maxI < 1 { // no limit
-		maxI = 999 // hard limit
+	if max < 1 || max > 999 { // no limit
+		max = 999 // hardlimit
 	}
-	maxRoutines := make(chan struct{}, maxI)
+
+	maxRoutines := make(chan struct{}, max) // semaphore
+
+	// get the function to make the get calls
 	get := internal.GetCallFunction(&wg, &maxRoutines)
 	testStart := time.Now()
 
@@ -44,25 +67,17 @@ func main() {
 
 	for _, url := range urls {
 		wg.Add(1)
-
-		if _, ok := options["-c"]; ok {
-			maxRoutines <- struct{}{}
-			go get(url, &responses)
-		} else {
-			get(url, &responses)
-		}
+		maxRoutines <- struct{}{}
+		go get(url, &responses)
 	}
+
 	wg.Wait()
 	totalTestTime := time.Since(testStart)
 	fmt.Printf("Total test time: %f\n", totalTestTime.Seconds())
 
-	if outpath, ok := options["-csv"]; ok {
-		internal.WriteCsv(responses, outpath)
-	} else if outpath, ok := options["-txt"]; ok {
-		internal.WriteTxt(responses, outpath)
-	} else if outpath, ok := options["-json"]; ok {
-		internal.WriteJson(responses, outpath)
-	} else {
-		internal.PrintResult(responses)
-	}
+	outtype := options["o"] // output file type
+	outpath := options["n"] // output file path
+
+	internal.Write(responses, outtype, outpath)
+
 }

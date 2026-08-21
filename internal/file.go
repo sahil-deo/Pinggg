@@ -29,7 +29,28 @@ func GetUrlList(filepath string) []string {
 	return urls
 }
 
-func WriteCsv(result []map[string]string, outpath string) {
+func Write(responses []map[string]string, outtype string, outpath string) {
+	outpath = getOutFilepath(outtype, outpath)
+	switch outtype {
+	case "json":
+		writeJson(responses, outpath)
+	case "csv":
+		writeCsv(responses, outpath)
+	case "txt":
+		writeTxt(responses, outpath)
+	default:
+		PrintResult(responses)
+	}
+}
+
+func getOutFilepath(outtype string, outpath string) string {
+	if outpath == "" {
+		outpath = "out." + outtype
+	}
+	return outpath
+}
+
+func writeCsv(result []map[string]string, outpath string) {
 	file, err := os.Create(outpath)
 	if err != nil {
 		log.Fatalf("err %s", err.Error())
@@ -44,7 +65,7 @@ func WriteCsv(result []map[string]string, outpath string) {
 	writer.Flush()
 }
 
-func WriteJson(result []map[string]string, outpath string) {
+func writeJson(result []map[string]string, outpath string) {
 	json, err := json.Marshal(result)
 	if err != nil {
 		log.Fatalf("Err %s", err.Error())
@@ -57,7 +78,7 @@ func WriteJson(result []map[string]string, outpath string) {
 	file.WriteString(string(json))
 }
 
-func WriteTxt(result []map[string]string, outpath string) {
+func writeTxt(result []map[string]string, outpath string) {
 	file, err := os.Create(outpath)
 	if err != nil {
 		log.Fatalf("err %s", err.Error())

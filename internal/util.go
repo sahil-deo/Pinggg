@@ -1,44 +1,16 @@
 package internal
 
 import (
+	"flag"
 	"fmt"
-	"log"
-	"os"
 )
 
-func GetOptions() map[string]string {
-	options := make(map[string]string)
-	lastArgErr := func(i int) {
-		if i == len(os.Args)-1 {
-			log.Fatal("Invalid Args")
-		}
-	}
-	for i := 1; i < len(os.Args); i++ {
-		switch os.Args[i] {
-		case "-csv":
-			lastArgErr(i)
-			options["-csv"] = os.Args[i+1]
-			i++
-		case "-json":
-			lastArgErr(i)
-			options["-json"] = os.Args[i+1]
-			i++
-		case "-txt":
-			lastArgErr(i)
-			options["-txt"] = os.Args[i+1]
-			i++
-		case "-f":
-			lastArgErr(i)
-			options["-f"] = os.Args[i+1]
-			i++
-		case "-c":
-			lastArgErr(i)
-			options["-c"] = os.Args[i+1]
-		}
-
-	}
-
-	return options
+func DefineFlags() {
+	flag.String("f", "", "filepath: input filepath, simple text files only")
+	flag.String("o", "", "outtype: output file type [json | csv | txt]; prints to cli if not specified")
+	flag.String("n", "", "name: output filepath")
+	flag.String("u", "", "url: single url to ping")
+	flag.String("c", "1", "concurrency: number of max go routinues allowed; use < 1 for no limits (hard internal limit at 999)")
 }
 
 func PrintResult(result []map[string]string) {
