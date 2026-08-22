@@ -8,17 +8,17 @@ import (
 	"os"
 )
 
-func GetUrlList(filepath string) []string {
+func GetRequestList(filepath string) []Request {
 	file, _ := os.Open(filepath)
 	defer file.Close()
 
 	r := bufio.NewScanner(file)
 
-	urls := []string{}
+	requests := []Request{}
 
 	for r.Scan() {
 		line := r.Text()
-		urls = append(urls, line)
+		requests = append(requests, Request{Url: line})
 	}
 
 	err := r.Err()
@@ -26,20 +26,20 @@ func GetUrlList(filepath string) []string {
 		log.Fatalf("scan error %s\n", err.Error())
 	}
 
-	return urls
+	return requests
 }
 
-func Write(responses []map[string]string, outtype string, outpath string) {
+func Write(requests *[]Request, outtype string, outpath string) {
 	outpath = getOutFilepath(outtype, outpath)
 	switch outtype {
 	case "json":
-		writeJson(responses, outpath)
+		writeJson(requests, outpath)
 	case "csv":
-		writeCsv(responses, outpath)
+		writeCsv(requests, outpath)
 	case "txt":
-		writeTxt(responses, outpath)
+		writeTxt(requests, outpath)
 	default:
-		PrintResult(responses)
+		PrintResult(requests)
 	}
 }
 
@@ -50,7 +50,7 @@ func getOutFilepath(outtype string, outpath string) string {
 	return outpath
 }
 
-func writeCsv(result []map[string]string, outpath string) {
+func writeCsv(result *[]Request, outpath string) {
 	file, err := os.Create(outpath)
 	if err != nil {
 		log.Fatalf("err %s", err.Error())
@@ -58,15 +58,15 @@ func writeCsv(result []map[string]string, outpath string) {
 	defer file.Close()
 	writer := bufio.NewWriter(file)
 	writer.WriteString("url,status,response_time\n")
-	for _, it := range result {
-		line := fmt.Sprintf("%s,%s,%s\n", it["url"], it["status"], it["response_time"])
+	for _, it := range *result {
+		line := fmt.Sprintf("%s,%s,%d\n", it.Url, it.Status, it.Response_time)
 		writer.WriteString(line)
 	}
 	writer.Flush()
 }
 
-func writeJson(result []map[string]string, outpath string) {
-	json, err := json.Marshal(result)
+func writeJson(result *[]Request, outpath string) {
+	json, err := json.Marshal(*result)
 	if err != nil {
 		log.Fatalf("Err %s", err.Error())
 	}
@@ -78,15 +78,15 @@ func writeJson(result []map[string]string, outpath string) {
 	file.WriteString(string(json))
 }
 
-func writeTxt(result []map[string]string, outpath string) {
+func writeTxt(result *[]Request, outpath string) {
 	file, err := os.Create(outpath)
 	if err != nil {
 		log.Fatalf("err %s", err.Error())
 	}
 	defer file.Close()
 	writer := bufio.NewWriter(file)
-	for _, it := range result {
-		line := fmt.Sprintf("%s %s %s\n", it["url"], it["status"], it["response_time"])
+	for _, it := range *result {
+		line := fmt.Sprintf("%s,%s,%d\n", it.Url, it.Status, it.Response_time)
 		writer.WriteString(line)
 	}
 	writer.Flush()

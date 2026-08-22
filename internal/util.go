@@ -14,8 +14,8 @@ func DefineFlags() {
 	flag.String("t", "10000", "timeout(ms): max time to wait for a request")
 }
 
-func PrintResult(result []map[string]string) {
-	for _, it := range result {
-		fmt.Printf("%s %s %s\n", it["url"], it["status"], it["response_time"])
+func PrintResult(result *[]Request) {
+	for _, it := range *result {
+		fmt.Printf("%s %s %d\n", it.Url, it.Status, it.Response_time)
 	}
 }

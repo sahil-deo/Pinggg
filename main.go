@@ -40,13 +40,13 @@ func main() {
 		log.Fatal("No url or filepath provided")
 	}
 
-	urls := []string{}
+	requests := []internal.Request{}
 
 	switch {
 	case uok:
-		urls = append(urls, url)
+		requests = append(requests, internal.Request{Url: url})
 	case fok:
-		urls = internal.GetUrlList(filepath)
+		requests = internal.GetRequestList(filepath)
 	}
 
 	var wg sync.WaitGroup
@@ -67,12 +67,10 @@ func main() {
 	get := internal.GetCallFunction(&wg, &maxRoutines)
 	testStart := time.Now()
 
-	responses := []map[string]string{}
-
-	for _, url := range urls {
+	for i := range requests {
 		wg.Add(1)
 		maxRoutines <- struct{}{}
-		go get(url, &responses, time.Duration(timeout_ms)*time.Millisecond)
+		go get(&requests[i], time.Duration(timeout_ms)*time.Millisecond)
 	}
 
 	wg.Wait()
@@ -82,6 +80,6 @@ func main() {
 	outtype := options["o"] // output file type
 	outpath := options["n"] // output file path
 
-	internal.Write(responses, outtype, outpath)
+	internal.Write(&requests, outtype, outpath)
 
 }
