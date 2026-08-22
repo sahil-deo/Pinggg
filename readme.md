@@ -31,7 +31,7 @@ https://www.linkedin.com 200 OK 390.19525ms
 | `-c [n]`            | `-c 5`                | Use go routines for simulteneously make http calls, n is max routines allowed, use < 0 for no limits
 | `-o [outtype]`      | `-o json`             | Output file type [ json \| csv \| txt ] 
 | `-n [filepath]`     | `-n out.json`         | Output file path
-| `-t [duration_ms]`   | `-t 10000`            | Timeout per request in ms
+| `-t [duration_ms]`  | `-t 10000`            | Timeout per request in ms
 | `-h`                | `-h`                  | Print Help
 
 #### Future Scope
