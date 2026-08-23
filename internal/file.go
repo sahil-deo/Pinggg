@@ -18,7 +18,11 @@ func GetRequestList(filepath string) []Request {
 
 	for r.Scan() {
 		line := r.Text()
-		requests = append(requests, Request{Url: line})
+		newRequest := GetRequestBuilder().
+			SetUrl(line).
+			SetMethod(GET).
+			Build()
+		requests = append(requests, newRequest)
 	}
 
 	err := r.Err()

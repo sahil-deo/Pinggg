@@ -30,12 +30,10 @@ func main() {
 		options[f.Name] = f.Value.String()
 	})
 
-	// u = url flag
-	// f = filepath flag
-	// atleast one is required
-	url, uok := options["u"]
-	filepath, fok := options["f"]
+	url, uok := options["u"]      // url flag
+	filepath, fok := options["f"] // filepath flag
 
+	// atleast one is required
 	if !uok && !fok {
 		log.Fatal("No url or filepath provided")
 	}
@@ -44,7 +42,12 @@ func main() {
 
 	switch {
 	case uok:
-		requests = append(requests, internal.Request{Url: url})
+		newRequest := internal.
+			GetRequestBuilder().
+			SetUrl(url).
+			SetMethod(internal.GET).
+			Build()
+		requests = append(requests, newRequest)
 	case fok:
 		requests = internal.GetRequestList(filepath)
 	}
@@ -80,6 +83,6 @@ func main() {
 	outtype := options["o"] // output file type
 	outpath := options["n"] // output file path
 
-	internal.Write(&requests, outtype, outpath)
+	internal.Write(&requests, outtype, outpath) // write to file / cli
 
 }
